@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\Geometry">
+      <UniqueIdentifier>{e843f833-64da-41db-bbfd-2eb1cb415ea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Tool">
+      <UniqueIdentifier>{9b7d1ff5-bd0e-42b3-8959-816c6d6fbb0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\RRT">
+      <UniqueIdentifier>{cbd5e0f9-5905-4a77-9a2d-9ea495de1d5b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OpenGL-RRT.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Include\GLAD\src\glad.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Geometry\BufferGeometry.h">
+      <Filter>头文件\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\SpherePlane.h">
+      <Filter>头文件\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\RectanglePlane.h">
+      <Filter>头文件\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool\shader.h">
+      <Filter>头文件\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\LinePlane.h">
+      <Filter>头文件\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="RRT\Node.h">
+      <Filter>头文件\RRT</Filter>
+    </ClInclude>
+    <ClInclude Include="RRT\Tree.h">
+      <Filter>头文件\RRT</Filter>
+    </ClInclude>
+    <ClInclude Include="RRT\Config.h">
+      <Filter>头文件\RRT</Filter>
+    </ClInclude>
+    <ClInclude Include="RRT\RRTSearchStrategy.h">
+      <Filter>头文件\RRT</Filter>
+    </ClInclude>
+    <ClInclude Include="RRT\RRTBasic.h">
+      <Filter>头文件\RRT</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
