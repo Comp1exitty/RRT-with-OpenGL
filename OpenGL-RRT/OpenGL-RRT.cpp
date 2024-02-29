@@ -71,6 +71,9 @@ void calculateFPS(GLFWwindow* window);
 // RRT对象指针
 RRTBasic* rrt_pointer;
 Config* rrtconfig;
+// 绘制体数量计数
+int sphere_num, line_num, rectangle_num;
+bool once = false;
 int main()
 {
 	// RRT树
@@ -147,7 +150,7 @@ int main()
 	// RRT参数设置
 	std::vector<RectanglePlane::Rectangle>* obstacle_list = new std::vector<RectanglePlane::Rectangle>; //障碍物列表
 	obstacle_list->push_back(geo_rectangle_one);
-	rrtconfig = new Config(testTree, target, 50.0f, obstacle_list, 1000, 10.0f); //RRT配置参数
+	rrtconfig = new Config(testTree, target, 20.0f, obstacle_list, 2000, 40.0f); //RRT配置参数
 	RRTBasic rrt(rrtconfig);
 	rrt_pointer = &rrt;
 	// 路径起终点单独绘制
@@ -248,70 +251,110 @@ void draw_element(BufferGeometry* element, Shader shader) {
 	element->draw();
 }
 void thread1(GLFWwindow* window,glm::vec2 ratio, Geometry_List& geo_list, std::vector<glm::vec2>& geo_line_list) {
-	while (!glfwWindowShouldClose(window) && !rrt_pointer->_tree->foundPath && count < rrtconfig->m_maxcount)
+	while (!glfwWindowShouldClose(window))
 	{
-		Node* tmp_node= rrt_pointer->AddOneNodeToTree();
-		if (tmp_node == nullptr) continue;
-		Sphere geo_sphere_tmp1, geo_sphere_tmp2;
-		Line geo_line_tmp;
-		
-		// 新节点存入线形列表和球体列表
-		glm::vec2 tmp = glm::vec2(tmp_node->m_position.x, tmp_node->m_position.y);
-		geo_line_list.push_back(tmp);
-		geo_sphere_tmp1.m_center = tmp; geo_sphere_tmp1.m_radius = 2.5f; geo_sphere_tmp1.m_radio = ratio;
-		// 父节点存入线形列表和球体列表
-		tmp = glm::vec2(tmp_node->parent->m_position.x, tmp_node->parent->m_position.y);
-		geo_sphere_tmp2.m_center = tmp; geo_sphere_tmp2.m_radius = 2.5f; geo_sphere_tmp2.m_radio = ratio;
-		geo_line_list.push_back(tmp);
-		geo_line_tmp.m_width = 5; geo_line_tmp.m_color = glm::vec3(0, 1, 1); geo_line_tmp.m_ratio = ratio;
+		if (!rrt_pointer->_tree->foundPath && count < rrtconfig->m_maxcount) {
+			Node* tmp_node = rrt_pointer->AddOneNodeToTree();
+			if (tmp_node == nullptr) continue;
+			Sphere geo_sphere_tmp1, geo_sphere_tmp2;
+			Line geo_line_tmp;
 
-		{
-			std::unique_lock<std::mutex> lock(mtx);
-			geo_list.sphere_list.push_back(geo_sphere_tmp1);
-			geo_list.sphere_list.push_back(geo_sphere_tmp2);
-			if (geo_line_list.size() > 1) {
-				auto it = geo_line_list.end();
-				geo_line_tmp.m_end = *(it - 1);
-				geo_line_tmp.m_start = *(it - 2);
-				geo_list.line_list.push_back(geo_line_tmp);
-			}			
+			// 新节点存入线形列表和球体列表
+			glm::vec2 tmp = glm::vec2(tmp_node->m_position.x, tmp_node->m_position.y);
+			geo_line_list.push_back(tmp);
+			geo_sphere_tmp1.m_center = tmp; geo_sphere_tmp1.m_radius = 2.5f; geo_sphere_tmp1.m_radio = ratio;
+			// 父节点存入线形列表和球体列表
+			tmp = glm::vec2(tmp_node->parent->m_position.x, tmp_node->parent->m_position.y);
+			geo_sphere_tmp2.m_center = tmp; geo_sphere_tmp2.m_radius = 2.5f; geo_sphere_tmp2.m_radio = ratio;
+			geo_line_list.push_back(tmp);
+			geo_line_tmp.m_width = 5; geo_line_tmp.m_color = glm::vec3(0, 1, 1); geo_line_tmp.m_ratio = ratio;
+
+			{
+				std::unique_lock<std::mutex> lock(mtx);
+				geo_list.sphere_list.push_back(geo_sphere_tmp1);
+				geo_list.sphere_list.push_back(geo_sphere_tmp2);
+				if (geo_line_list.size() > 1) {
+					auto it = geo_line_list.end();
+					geo_line_tmp.m_end = *(it - 1);
+					geo_line_tmp.m_start = *(it - 2);
+					geo_list.line_list.push_back(geo_line_tmp);
+				}
+			}
+			count++;
+			//if (count > 1000) renwu = true;
+			//inserted = true;
+			cv.notify_one();
+			// 等待1秒
+			//std::chrono::seconds duration(1);
+			//std::chrono::milliseconds duration(1000);
+			//std::this_thread::sleep_for(duration);
 		}
-		count++;
-		//if (count > 1000) renwu = true;
+		else if (rrt_pointer->_tree->foundPath&&!once)
+		{
+			Line geo_line_smooth;
+			Node* self = rrt_pointer->_tree->targetNode;
+			geo_line_smooth.m_width = 5; geo_line_smooth.m_color = glm::vec3(1, 0, 0); geo_line_smooth.m_ratio = ratio;
+			{
+				std::unique_lock<std::mutex> lock(mtx);
+				while (self->parent != nullptr)
+				{
+					geo_line_smooth.m_end = self->m_position;
+					geo_line_smooth.m_start = self->parent->m_position;
+					geo_list.line_list.push_back(geo_line_smooth);
+					self = self->parent;
+				}
+			}
+			//inserted = true;
+			once = true;
+			cv.notify_one();
+		}
+		else {
+			//std::cout << "搜索失败" << std::endl;
+			//break;
+		}
 		inserted = true;
-		cv.notify_one();
-		// 等待1秒
-		//std::chrono::seconds duration(1);
-		//std::chrono::milliseconds duration(1000);
-		//std::this_thread::sleep_for(duration);
+
 	}
 }
 void trans(GLFWwindow* window, Geo_plane_list& plane_list,
 	const Geometry_List& geo_list, std::unique_lock<std::mutex>& lock) {
-	if (rrt_pointer->_tree->foundPath||!(count< rrtconfig->m_maxcount)) return;
+	//if (rrt_pointer->_tree->foundPath||!(count< rrtconfig->m_maxcount)) return;
 	// 等待子线程通知
 	cv.wait(lock, [] { return inserted; });
-	if (geo_list.sphere_list.size() != 0) {
-		SpherePlane* sphere_tmp = new SpherePlane(geo_list.sphere_list.back());
-		plane_list.sphere_plane_list.push_back(*sphere_tmp);
-		sphere_tmp=new SpherePlane(*(geo_list.sphere_list.end()-2));
-		plane_list.sphere_plane_list.push_back(*sphere_tmp);
-		delete sphere_tmp;
+	if (geo_list.sphere_list.size() != sphere_num) {
+		int n = geo_list.sphere_list.size() - sphere_num;
+		for (auto i = geo_list.sphere_list.rbegin();i != geo_list.sphere_list.rbegin() + n;i++) {
+			SpherePlane* sphere_tmp = new SpherePlane(*i);
+			plane_list.sphere_plane_list.push_back(*sphere_tmp);
+			delete sphere_tmp;
+		}
+		sphere_num = geo_list.sphere_list.size();
 	}
-	if (geo_list.rectangle_list.size() != 0) {
-		RectanglePlane::RectanglePlane* rectangle_tmp = new RectanglePlane::RectanglePlane(geo_list.rectangle_list.back());
-		plane_list.rectangle_plane_list.push_back(*rectangle_tmp);
-		delete rectangle_tmp;
+	if (geo_list.rectangle_list.size() != rectangle_num) {		
+		int j = geo_list.rectangle_list.size() - rectangle_num;
+		for (auto i = geo_list.rectangle_list.rbegin(); i != geo_list.rectangle_list.rbegin()+j; i++)
+		{
+			RectanglePlane::RectanglePlane* rectangle_tmp = new RectanglePlane::RectanglePlane(*i);
+			plane_list.rectangle_plane_list.push_back(*rectangle_tmp);
+			delete rectangle_tmp;
+		}
+		rectangle_num = geo_list.rectangle_list.size();
 	}
-	if (geo_list.line_list.size() != 0) {
-		LinePlane* line_tmp = new LinePlane(geo_list.line_list.back());
-		plane_list.line_plane_list.push_back(*line_tmp);
-		delete line_tmp;
+	if (geo_list.line_list.size() != line_num) {		
+		int k = geo_list.line_list.size() - line_num;
+		for (auto i = geo_list.line_list.rbegin(); i != geo_list.line_list.rbegin()+k; i++)
+		{
+			LinePlane* line_tmp = new LinePlane(*i);
+			plane_list.line_plane_list.push_back(*line_tmp);
+			delete line_tmp;
+		}
+		line_num = geo_list.line_list.size();
 	}
 	transed = true;
 }
 void lastdraw(GLFWwindow* window, Shader& ourShader,const Geo_plane_list& plane_list, std::unique_lock<std::mutex>& lock) {
-	cv.wait(lock, [] { return transed || rrt_pointer->_tree->foundPath|| !(count < rrtconfig->m_maxcount); });
+	//cv.wait(lock, [] { return transed || rrt_pointer->_tree->foundPath|| !(count < rrtconfig->m_maxcount); });
+	cv.wait(lock, [] { return transed; });
 	// 事件检查
 	glfwPollEvents();
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

@@ -20,7 +20,7 @@ RRTBasic::RRTBasic(Config* rrtconfig):RRTSearchStrategy(rrtconfig)
 Node* RRTBasic::AddOneNodeToTreeAtPosition(glm::vec2 pos) {
 	Node* closestnode = this->_tree->GetClosestNode(pos);
 	glm::vec2 direction = pos - closestnode->m_position;
-	Node* newnode = new Node(closestnode->m_position+this->m_rrtconfig->m_maxBranchLength*glm::normalize(direction));
+	Node* newnode = new Node(closestnode->m_position+ (this->m_rrtconfig->m_maxBranchLength > glm::length(direction) ? glm::length(direction) : this->m_rrtconfig->m_maxBranchLength) *glm::normalize(direction));
 	if (this->IsColliding(closestnode->m_position, newnode->m_position, this->m_obstacle)) {
 		delete	newnode;
 		return nullptr;
