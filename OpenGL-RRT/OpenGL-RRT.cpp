@@ -20,6 +20,7 @@
 
 #include "RRT/Config.h"
 #include "RRT/RRTBasic.h"
+#include "RRT/RRTInformed.h"
 
 #include"Tool/shader.h"
 
@@ -69,7 +70,8 @@ void dispose_draw(Geo_plane_list& plane_list);
 // 帧率计算
 void calculateFPS(GLFWwindow* window);
 // RRT对象指针
-RRTBasic* rrt_pointer;
+//RRTBasic* rrt_pointer;
+RRTInformed* rrt_pointer;
 Config* rrtconfig;
 // 绘制体数量计数
 int sphere_num, line_num, rectangle_num;
@@ -142,16 +144,17 @@ int main()
 	std::vector<glm::vec2> geo_line_list;
 	// 静态矩形障碍物创建
 	RectanglePlane::Rectangle geo_rectangle_one;
-	geo_rectangle_one.m_center = glm::vec2(0.0f, 100.0f); geo_rectangle_one.m_width = 500.0f;
+	geo_rectangle_one.m_center = glm::vec2(0.0f, 100.0f); geo_rectangle_one.m_width = 700.0f;
 	geo_rectangle_one.m_height = 150.0f; geo_rectangle_one.m_ratio = ratio;
-	geo_rectangle_one.m_angle = 40.0f;
+	geo_rectangle_one.m_angle = 0.0f;
 	RectanglePlane::RectanglePlane rectangle_one(geo_rectangle_one);
 	plane_list.rectangle_plane_list.push_back(rectangle_one);
 	// RRT参数设置
 	std::vector<RectanglePlane::Rectangle>* obstacle_list = new std::vector<RectanglePlane::Rectangle>; //障碍物列表
 	obstacle_list->push_back(geo_rectangle_one);
 	rrtconfig = new Config(testTree, target, 20.0f, obstacle_list, 2000, 40.0f); //RRT配置参数
-	RRTBasic rrt(rrtconfig);
+	//RRTBasic rrt(rrtconfig);
+	RRTInformed rrt(rrtconfig);
 	rrt_pointer = &rrt;
 	// 路径起终点单独绘制
 	Sphere* geo_sphere_root = new Sphere();

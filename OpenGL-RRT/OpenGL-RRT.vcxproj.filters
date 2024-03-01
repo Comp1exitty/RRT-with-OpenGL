@@ -62,5 +62,8 @@
     <ClInclude Include="RRT\RRTBasic.h">
       <Filter>头文件\RRT</Filter>
     </ClInclude>
+    <ClInclude Include="RRT\RRTInformed.h">
+      <Filter>头文件\RRT</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
