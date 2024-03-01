@@ -364,9 +364,5 @@ void calculateFPS(GLFWwindow* window) {
 		frameCount = 0;
 		lastTime = currentTime;
 	}
-
-	// 绘制帧率信息，你可以使用OpenGL的绘图函数来实现
-	// 例如，使用ImGui库来方便地在窗口中显示文本信息
-	// ImGui::Text("FPS: %.2f", fps);
 }
 
