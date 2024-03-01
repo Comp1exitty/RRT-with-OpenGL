@@ -283,7 +283,7 @@ void thread1(GLFWwindow* window,glm::vec2 ratio, Geometry_List& geo_list, std::v
 			count++;
 			//if (count > 1000) renwu = true;
 			//inserted = true;
-			cv.notify_one();
+			//cv.notify_one();
 			// 等待1秒
 			//std::chrono::seconds duration(1);
 			//std::chrono::milliseconds duration(1000);
@@ -306,13 +306,14 @@ void thread1(GLFWwindow* window,glm::vec2 ratio, Geometry_List& geo_list, std::v
 			}
 			//inserted = true;
 			once = true;
-			cv.notify_one();
+			//cv.notify_one();
 		}
 		else {
 			//std::cout << "搜索失败" << std::endl;
 			//break;
 		}
 		inserted = true;
+		cv.notify_one();
 
 	}
 }
