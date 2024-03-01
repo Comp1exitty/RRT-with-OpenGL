@@ -82,13 +82,6 @@ int main()
 	Tree* testTree=new Tree(glm::vec2(-400, -400));
 	glm::vec2 target(400, 400);
 
-	// 矩形旋转处理方法
-	//glm::mat4 transs = glm::mat4(1.0f);
-	//transs = glm::translate(transs, glm::vec3(100.0f, 100.0f, 0.0f));
-	//transs = glm::rotate(transs, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	//glm::vec4 tmpp = transs*glm::vec4(150, 150, 0, 1);
-
-
 	// 获取当前工程路径
 	char buffer[MAX_PATH];
 	GetCurrentDirectoryA(MAX_PATH, buffer);
@@ -188,37 +181,6 @@ int main()
 		}
 		//calculateFPS(window);
 	}
-	// 渲染循环
-	//while (!glfwWindowShouldClose(window))
-	//{
-	//	thread_first = new std::thread(thread1, thhh);
-	//	thread_second = new std::thread(thread2, thhh);
-
-	//	// 事件检查
-	//	glfwPollEvents();
-	//	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	//	glClear(GL_COLOR_BUFFER_BIT);
-	//	// 设置视口参数
-	//	int width, height;
-	//	glfwGetFramebufferSize(window, &width, &height);
-	//	glViewport(0, 0, width, height);
-	//	// 调用着色器
-	//	ourShader.use();
-
-	//	// 线宽设置
-	//	// glLineWidth(5.0f);
-	//	draw_element(&line5, ourShader);
-	//	draw_element(&rectangle_one, ourShader);
-	//	draw_element(&sphere1, ourShader);
-	//	draw_element(&sphere2, ourShader);
-	//	draw_element(&line1, ourShader);
-	//	draw_element(&line2, ourShader);
-	//	draw_element(&line3, ourShader);
-	//	draw_element(&line4, ourShader);
-	//	
-
-	//	glfwSwapBuffers(window);
-	//}
 	// 解除链接资源（不再绘制）
 	thread_first.join();
 

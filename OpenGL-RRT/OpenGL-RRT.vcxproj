@@ -160,6 +160,7 @@
     <ClInclude Include="RRT\Config.h" />
     <ClInclude Include="RRT\Node.h" />
     <ClInclude Include="RRT\RRTBasic.h" />
+    <ClInclude Include="RRT\RRTInformed.h" />
     <ClInclude Include="RRT\RRTSearchStrategy.h" />
     <ClInclude Include="RRT\Tree.h" />
     <ClInclude Include="Tool\shader.h" />
