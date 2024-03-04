@@ -13,6 +13,7 @@
 *.lib
 *.gitignore
 *.json
+/OpenGL-RRT/Shader/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
