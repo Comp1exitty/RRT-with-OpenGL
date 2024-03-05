@@ -49,34 +49,26 @@ bool RRTSearchStrategy::IsColliding(glm::vec2 begin, glm::vec2 end, std::vector<
 	return false;
 }
 bool RRTSearchStrategy::IsCollidingWithObstacle(glm::vec2 begin, glm::vec2 end, RectanglePlane::Rectangle obstacle) {
+	// trans1控制矩形障碍物，trans2控制线形
 	glm::mat4 trans1 = glm::mat4(1.0f);
 	glm::mat4 trans2 = trans1;
+	// 自带旋转角度的矩形障碍物反向旋转修正
 	trans1 = glm::rotate(trans1, glm::radians(-obstacle.m_angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	trans1 = glm::translate(trans1, glm::vec3(obstacle.m_center.x, obstacle.m_center.y, 0.0f));
 	trans1 = glm::rotate(trans1, glm::radians(obstacle.m_angle), glm::vec3(0.0f, 0.0f, 1.0f));
-	
+	// 线形反向旋转一次
 	trans2 = glm::rotate(trans2, glm::radians(-obstacle.m_angle), glm::vec3(0.0f, 0.0f, 1.0f));
-	
+	// 原始矩形障碍物顶点坐标
 	glm::vec4 right_up = glm::vec4(obstacle.m_width / 2, obstacle.m_height / 2,0,1);
 	glm::vec4 left_down = glm::vec4(-obstacle.m_width / 2, -obstacle.m_height / 2,0,1);
 	glm::vec4 line_vector_b = glm::vec4(begin.x, begin.y, 0, 1);
 	glm::vec4 line_vector_e = glm::vec4(end.x, end.y, 0, 1);
-	
+	// 旋转修正后的顶点坐标
 	glm::vec4 right_up_new = trans1 * right_up;
 	glm::vec4 left_down_new = trans1 * left_down;
 	glm::vec4 line_vector_b_new = trans2 * line_vector_b;
 	glm::vec4 line_vector_e_new = trans2 * line_vector_e;
-
-	
-	//float obstacle_manX = obstacle.m_center.x + obstacle.m_width / 2;
-	//float obstacle_minX = obstacle.m_center.x - obstacle.m_width / 2;
-	//float obstacle_manY = obstacle.m_center.y + obstacle.m_height / 2;
-	//float obstacle_minY = obstacle.m_center.y - obstacle.m_height / 2;
-	//float line_manX = std::fmax(begin.x, end.x);
-	//float line_minX = std::fmin(begin.x, end.x);
-	//float line_manY = std::fmax(begin.y, end.y);
-	//float line_minY = std::fmin(begin.y, end.y);
-
+	// 判断线形是否与障碍物重叠
 	float obstacle_manX = right_up_new.x;
 	float obstacle_minX = left_down_new.x;
 	float obstacle_manY = right_up_new.y;
