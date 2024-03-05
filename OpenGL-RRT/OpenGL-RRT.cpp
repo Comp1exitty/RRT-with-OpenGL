@@ -365,4 +365,7 @@ void calculateFPS(GLFWwindow* window) {
 		lastTime = currentTime;
 	}
 }
+void dev_test1() {
+	std::cout << "123" << std::endl;
+}
 
