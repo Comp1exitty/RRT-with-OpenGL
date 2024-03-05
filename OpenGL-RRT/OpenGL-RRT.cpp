@@ -368,4 +368,7 @@ void calculateFPS(GLFWwindow* window) {
 void dev_test1() {
 	std::cout << "123" << std::endl;
 }
+void dev_test2() {
+	std::cout << "456" << std::endl;
+}
 
