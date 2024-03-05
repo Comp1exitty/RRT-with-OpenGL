@@ -371,4 +371,7 @@ void dev_test1() {
 void dev_test2() {
 	std::cout << "456" << std::endl;
 }
+void dev_test3() {
+	std::cout << "789" << std::endl;
+}
 
