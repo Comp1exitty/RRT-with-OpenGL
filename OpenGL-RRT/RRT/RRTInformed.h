@@ -4,7 +4,7 @@
 class RRTInformed :public RRTBasic
 {
 public:
-	RRTInformed(Config* rrtconfig);
+	RRTInformed(Config& rrtconfig);
 	virtual Node* AddOneNodeToTree();
 	~RRTInformed();
 
@@ -12,7 +12,7 @@ private:
 	int count;
 };
 
-RRTInformed::RRTInformed(Config* rrtconfig):RRTBasic(rrtconfig)
+RRTInformed::RRTInformed(Config& rrtconfig):RRTBasic(rrtconfig)
 {
 }
 Node* RRTInformed::AddOneNodeToTree() {

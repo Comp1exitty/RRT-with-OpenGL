@@ -3,7 +3,7 @@
 class Config
 {
 public:
-	Config(Tree* treeRRT,glm::vec2 target, float maxBranchLength,std::vector<RectanglePlane::Rectangle>* Obstacle,
+	Config(Tree& treeRRT,glm::vec2 target, float maxBranchLength,std::vector<RectanglePlane::Rectangle>& Obstacle,
 		int maxCount,float threshold);
 	Tree* m_tree;
 	float m_maxBranchLength;
@@ -17,13 +17,13 @@ private:
 
 };
 
-Config::Config(Tree* treeRRT, glm::vec2 target, float maxBranchLength, std::vector<RectanglePlane::Rectangle>* Obstacle,
+Config::Config(Tree& treeRRT, glm::vec2 target, float maxBranchLength, std::vector<RectanglePlane::Rectangle>& Obstacle,
 	int maxCount, float threshold)
 {
-	this->m_tree = treeRRT;
+	this->m_tree = &treeRRT;
 	this->m_maxBranchLength = maxBranchLength;
 	this->m_maxcount = maxCount;
-	this->m_obstacle = Obstacle;
+	this->m_obstacle = &Obstacle;
 	this->gotarget = target;
 	this->m_threshold = threshold;
 }

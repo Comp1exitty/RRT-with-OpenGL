@@ -6,7 +6,7 @@
 class RRTSearchStrategy
 {
 public:
-	RRTSearchStrategy(Config* rrtconfig);
+	RRTSearchStrategy(Config& rrtconfig);
 	virtual Node* AddOneNodeToTreeAtPosition(glm::vec2 pos)=0;
 	virtual Node* AddOneNodeToTree() = 0;
 	bool IsColliding(glm::vec2 begin, glm::vec2 end, std::vector<RectanglePlane::Rectangle>* obstacle);
@@ -24,12 +24,12 @@ protected:
 	bool IsCollidingWithTarget(glm::vec2 end);
 };
 
-RRTSearchStrategy::RRTSearchStrategy(Config* rrtconfig)
+RRTSearchStrategy::RRTSearchStrategy(Config& rrtconfig)
 {
-	m_rrtconfig = rrtconfig;
-	_tree = rrtconfig->m_tree;
-	m_target = rrtconfig->gotarget;
-	m_obstacle = rrtconfig->m_obstacle;
+	m_rrtconfig = &rrtconfig;
+	_tree = (&rrtconfig)->m_tree;
+	m_target = (&rrtconfig)->gotarget;
+	m_obstacle = (&rrtconfig)->m_obstacle;
 }
 glm::vec2 RRTSearchStrategy::getRandomPosition() {
 	// 设置随机数生成器

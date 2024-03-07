@@ -4,7 +4,7 @@
 class RRTBasic:public RRTSearchStrategy
 {
 public:
-	RRTBasic(Config* rrtconfig);
+	RRTBasic(Config& rrtconfig);
 	virtual Node* AddOneNodeToTreeAtPosition(glm::vec2 pos);
 	virtual Node* AddOneNodeToTree();
 	~RRTBasic();
@@ -13,7 +13,7 @@ private:
 
 };
 
-RRTBasic::RRTBasic(Config* rrtconfig):RRTSearchStrategy(rrtconfig)
+RRTBasic::RRTBasic(Config& rrtconfig):RRTSearchStrategy(rrtconfig)
 {
 	
 }
