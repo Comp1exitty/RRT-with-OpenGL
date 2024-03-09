@@ -54,7 +54,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 // 窗口变化监听函数
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 // 图元绘制函数
-void draw_element(BufferGeometry* element, Shader);
+void draw_element(BufferGeometry& element, Shader);
 // 窗口尺寸
 const GLuint width = 1920, height = 1080;
 
@@ -165,7 +165,7 @@ int main()
 	std::thread thread_first(thread1, window,ratio, std::ref(geo_list), std::ref(geo_line_list));
 	// 循环转换与绘制
 	while (!glfwWindowShouldClose(window)) {
-		//calculateFPS(window);
+		calculateFPS(window);
 		{
 			std::unique_lock<std::mutex> lock(mtx);
 			// 数据转换
@@ -202,11 +202,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
-void draw_element(BufferGeometry* element, Shader shader) {
+void draw_element(const BufferGeometry& element, Shader shader) {
 	// 创建变换矩阵
 	glm::mat4 trans = glm::mat4(1.0f);
-	shader.setMat4("transform", element->trans);
-	element->draw();
+	shader.setMat4("transform", element.trans);
+	element.draw();
 }
 void thread1(GLFWwindow* window,glm::vec2 ratio, Geometry_List& geo_list, std::vector<glm::vec2>& geo_line_list) {
 	while (!glfwWindowShouldClose(window))
@@ -320,14 +320,14 @@ void lastdraw(GLFWwindow* window, Shader& ourShader,const Geo_plane_list& plane_
 	ourShader.use();
 	// 线宽设置
 	// glLineWidth(5.0f);
-	for (SpherePlane i : plane_list.sphere_plane_list) {
-		draw_element(&i, ourShader);
+	for (const SpherePlane& i : plane_list.sphere_plane_list) {
+		draw_element(i, ourShader);
 	};
-	for (RectanglePlane::RectanglePlane i : plane_list.rectangle_plane_list) {
-		draw_element(&i, ourShader);
+	for (const RectanglePlane::RectanglePlane& i : plane_list.rectangle_plane_list) {
+		draw_element(i, ourShader);
 	};
-	for (LinePlane i : plane_list.line_plane_list) {
-		draw_element(&i, ourShader);
+	for (const LinePlane& i : plane_list.line_plane_list) {
+		draw_element(i, ourShader);
 	};
 	glfwSwapBuffers(window);
 	inserted = false; transed = false;

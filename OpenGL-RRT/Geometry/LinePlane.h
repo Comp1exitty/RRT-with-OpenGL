@@ -25,7 +25,7 @@ class LinePlane : public BufferGeometry
 public:
 	LinePlane(const Line& line);
 	~LinePlane();
-	virtual void draw();
+	virtual void draw() const;
 
 private:
 	// Ö±Ïß¶¥µã
@@ -57,7 +57,7 @@ LinePlane::~LinePlane()
 
 }
 
-void LinePlane::draw() {
+void LinePlane::draw() const {
 	glBindVertexArray(this->VAO);
 	glDrawArrays(GL_LINES, 0, 2);
 }

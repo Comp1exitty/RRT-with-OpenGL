@@ -38,7 +38,7 @@ public:
     ~BufferGeometry(); 
     void dispose();
     //virtual void draw();
-    virtual void draw();
+    virtual void draw() const;
 
 protected:
     unsigned int VBO, EBO;
@@ -62,7 +62,7 @@ void BufferGeometry::dispose()
     glDeleteBuffers(1, &EBO);
 }
 
-void BufferGeometry::draw() {
+void BufferGeometry::draw() const{
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, this->num_indic, GL_UNSIGNED_INT, 0);
 }
